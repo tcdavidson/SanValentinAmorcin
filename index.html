@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gimcana d'Amor</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Fondo con emojis flotantes mejorado */
+        .floating-emojis {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .emoji-float {
+            position: absolute;
+            font-size: 30px;
+            animation: floatUp 12s linear infinite;
+            bottom: -50px;
+            opacity: 0.6;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(0) rotate(0deg) scale(1);
+                opacity: 0;
+            }
+            10% { opacity: 0.8; }
+            90% { opacity: 0.8; }
+            100% {
+                transform: translateY(-100vh) rotate(360deg) scale(0.5);
+                opacity: 0;
+            }
+        }
+
+        /* Contenedor principal con efecto glassmorphism premium */
+        .container {
+            background: rgba(255, 255, 255, 0.85);
+            padding: 50px 40px;
+            border-radius: 40px;
+            box-shadow: 
+                0 20px 60px rgba(255, 105, 180, 0.3),
+                0 0 0 1px rgba(255, 255, 255, 0.5) inset;
+            text-align: center;
+            max-width: 650px;
+            width: 90%;
+            position: relative;
+            z-index: 10;
+            backdrop-filter: blur(20px);
+            border: 2px solid rgba(255, 255, 255, 0.6);
+            animation: gentleFloat 8s ease-in-out infinite;
+        }
+
+        @keyframes gentleFloat {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-8px) rotate(0.5deg); }
+        }
+
+        /* Decoración de corazones en las esquinas */
+        .container::before,
+        .container::after {
+            content: '💕';
+            position: absolute;
+            font-size: 2em;
+            opacity: 0.3;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .container::before {
+            top: 20px;
+            left: 20px;
+        }
+
+        .container::after {
+            bottom: 20px;
+            right: 20px;
+            animation-delay: 1s;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.3; }
+            50% { transform: scale(1.2); opacity: 0.6; }
+        }
+
+        /* Steps con transiciones suaves */
+        .step {
+            display: none;
+            opacity: 0;
+            transform: translateY(30px) scale(0.95);
+            transition: all 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .step.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        /* Títulos estilizados */
+        h1 {
+            color: #d63384;
+            font-size: 2.2em;
+            margin-bottom: 25px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-shadow: 2px 2px 4px rgba(214, 51, 132, 0.1);
+            line-height: 1.3;
+        }
+
+        .heart {
+            color: #ff1744;
+            font-size: 1.3em;
+            animation: heartbeat 1.2s ease-in-out infinite;
+            display: inline-block;
+            filter: drop-shadow(0 2px 4px rgba(255, 23, 68, 0.3));
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            25% { transform: scale(1.1); }
+            50% { transform: scale(1); }
+            75% { transform: scale(1.15); }
+        }
+
+        /* Párrafos con mejor tipografía */
+        p {
+            color: #5a4a5a;
+            font-size: 1.15em;
+            line-height: 1.9;
+            margin-bottom: 35px;
+            font-weight: 400;
+            text-align: center;
+            padding: 0 10px;
+        }
+
+        /* Botón principal estilizado */
+        .btn-continue {
+            background: linear-gradient(135deg, #ff6b9d 0%, #ff8e53 100%);
+            color: white;
+            border: none;
+            padding: 18px 45px;
+            font-size: 1.1em;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 
+                0 10px 30px rgba(255, 107, 157, 0.4),
+                0 0 0 3px rgba(255, 255, 255, 0.3) inset;
+            font-family: 'Segoe UI', sans-serif;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-continue::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn-continue:hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 
+                0 15px 40px rgba(255, 107, 157, 0.5),
+                0 0 0 3px rgba(255, 255, 255, 0.5) inset;
+        }
+
+        .btn-continue:hover::before {
+            left: 100%;
+        }
+
+        .btn-continue:active {
+            transform: translateY(-2px) scale(0.98);
+        }
+
+        /* Botones de opción (Sí/No) */
+        .tricky-buttons {
+            display: flex;
+            gap: 25px;
+            justify-content: center;
+            align-items: center;
+            margin-top: 30px;
+            flex-wrap: wrap;
+            min-height: 80px;
+        }
+
+        .btn-option {
+            padding: 18px 35px;
+            font-size: 1.05em;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            font-family: 'Segoe UI', sans-serif;
+            font-weight: 600;
+            position: relative;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .btn-yes {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-width: 200px;
+        }
+
+        .btn-yes:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 12px 35px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-no {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            transform-origin: center;
+        }
+
+        .btn-no.shrinking {
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        /* Texto sospechoso */
+        .suspicious-text {
+            color: #ff1744;
+            font-size: 1em;
+            margin-top: 20px;
+            opacity: 0;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            font-style: italic;
+            transform: translateY(-10px);
+        }
+
+        .suspicious-text.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Modal de confirmación */
+        .tease-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            backdrop-filter: blur(8px);
+        }
+
+        .tease-modal.show {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: white;
+            padding: 40px 35px;
+            border-radius: 30px;
+            text-align: center;
+            max-width: 420px;
+            width: 90%;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+            animation: popIn 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            border: 3px solid #ff9a9e;
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.5) rotate(-5deg); opacity: 0; }
+            100% { transform: scale(1) rotate(0deg); opacity: 1; }
+        }
+
+        .modal-content h3 {
+            color: #d63384;
+            margin-bottom: 20px;
+            font-size: 1.6em;
+            font-weight: 700;
+        }
+
+        .modal-content p {
+            font-style: normal;
+            margin-bottom: 25px;
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .emoji-big {
+            font-size: 4em;
+            margin-bottom: 15px;
+            display: block;
+            animation: bounce 1s ease infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .btn-modal {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            color: #d63384;
+            border: 2px solid #ff9a9e;
+            padding: 12px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-family: 'Segoe UI', sans-serif;
+            font-weight: 600;
+            margin: 8px;
+            transition: all 0.3s ease;
+            font-size: 0.95em;
+        }
+
+        .btn-modal:hover {
+            transform: scale(1.05);
+            background: linear-gradient(135deg, #ff6b9d 0%, #ff8e53 100%);
+            color: white;
+            border-color: transparent;
+        }
+
+        /* Indicador de progreso mejorado */
+        .progress-dots {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 35px;
+            flex-wrap: wrap;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #e0e0e0;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 2px solid transparent;
+        }
+
+        .dot.active {
+            background: linear-gradient(135deg, #ff6b9d 0%, #ff8e53 100%);
+            transform: scale(1.4);
+            border-color: white;
+            box-shadow: 0 4px 10px rgba(255, 107, 157, 0.4);
+        }
+
+        /* Efectos especiales para el último paso */
+        .final-step h1 {
+            color: #ff1744;
+            font-size: 2.4em;
+        }
+
+        .sparkle {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: radial-gradient(circle, #ffd700 0%, #ffaa00 100%);
+            border-radius: 50%;
+            animation: sparkle 2s linear infinite;
+            box-shadow: 0 0 10px #ffd700;
+        }
+
+        @keyframes sparkle {
+            0%, 100% { opacity: 0; transform: scale(0) rotate(0deg); }
+            50% { opacity: 1; transform: scale(1) rotate(180deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .container {
+                padding: 35px 25px;
+                border-radius: 30px;
+            }
+            
+            h1 {
+                font-size: 1.8em;
+            }
+            
+            p {
+                font-size: 1em;
+            }
+            
+            .btn-option {
+                padding: 15px 25px;
+                font-size: 0.95em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Fondo con múltiples emojis flotantes -->
+    <div class="floating-emojis" id="emojisContainer"></div>
+    
+    <!-- Modal travieso -->
+    <div class="tease-modal" id="teaseModal">
+        <div class="modal-content">
+            <span class="emoji-big">😏</span>
+            <h3>¿Segur que volies apretar l'altre?</h3>
+            <p>¿Intentes escapar d'aquesta pregunta? Molt sospechós... 😏</p>
+            <button class="btn-modal" onclick="closeModalAndContinue()">Vuic pegar-li un morreig al meu novio jaaaa</button>
+            <button class="btn-modal" onclick="closeModal()">Vuic pensarmeu millor</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Paso 1 -->
+        <div class="step active" id="step1">
+            <h1>Hola amorcito mio <span class="heart">❤</span></h1>
+            <p>Espere que estigues preparada per a esta gimcana, on t'indicaré pas a pas el que has de fer. Has de seguir els passos i, fins que no els realitzes, no podràs continuar. Sols podràs apretar el botó quan ja estigues al lloc indicat o hages realitzat l'acció pertinent…</p>
+            <button class="btn-continue" onclick="nextStep(2)">Continuar</button>
+        </div>
+
+        <!-- Paso 2 -->
+        <div class="step" id="step2">
+            <h1>Primer que res...</h1>
+            <p>Puja cap a dalt i pega-li una abraçada a Sary, que estarà desitjant tant com jo poder pegar-te un bes i donar-te molt d'amor.</p>
+            <button class="btn-continue" onclick="nextStep(3)">Ja estic dalt</button>
+        </div>
+
+        <!-- Paso 3 -->
+        <div class="step" id="step3">
+            <h1>Val ara ja estàs dalt</h1>
+            <p>Veuràs una llumeneta roja, dirigix-te cap a ella</p>
+            <button class="btn-continue" onclick="nextStep(4)">Ja estic al costat la llumeneta</button>
+        </div>
+
+        <!-- Paso 4 -->
+        <div class="step" id="step4">
+            <h1>Llum roja</h1>
+            <p>Llum roja, Sant Valentí, cors, amor… Per a molts, un dia puntual; per a nosaltres, el dia a dia. Un amor pur, que ens il·lumina cada dia, que ens fa sentir especials, que ens fa sentir únics, que ens fa sentir que som els més afortunats del món per tindre'ns l'un a l'altre.</p>
+            <button class="btn-continue" onclick="nextStep(5)">Ja he apagat la llum</button>
+        </div>
+
+        <!-- Paso 5 -->
+        <div class="step" id="step5">
+            <h1>Llum eterna</h1>
+            <p>Per moltes adversitats, per molts moments difícils, per molts obstacles, el nostre amor esta en una llum que mai s'apagarà. Fixat be, encara brilla el nostre amor.</p>
+            <button class="btn-continue" onclick="nextStep(6)">Ja estic al costat de la llum.</button>
+        </div>
+
+        <!-- Paso 6 -->
+        <div class="step" id="step6">
+            <h1>Xicotets detalls</h1>
+            <p>Bueno amor, al fi the tornat a regalar un ram, un detall, un petit gest, que se que t'agrada tant. No es res gran, pero si et dones conter, som tu, jo i Sary.</p>
+            <button class="btn-continue" onclick="nextStep(7)">Necesite pegarte un morreig ja.</button>
+        </div>
+
+        <!-- Paso 7 -->
+        <div class="step" id="step7">
+            <h1>Una coseta més...</h1>
+            <p>Abans de pujar cap a dalt, corre, ves al vàter, que alguna cosa més t'espera.</p>
+            <button class="btn-continue" onclick="nextStep(8)">Ja estic al vater.</button>
+        </div>
+
+        <!-- Paso 8 -->
+        <div class="step" id="step8">
+            <h1>Es bromi</h1>
+            <p>Pero amor, com vaig a deixarte algo en San Valentin en el vàter? Corre, ves a la nevera.</p>
+            <button class="btn-continue" onclick="nextStep(9)">Ja he obert la nevera.</button>
+        </div>
+
+        <!-- Paso 9 -->
+        <div class="step" id="step9">
+            <h1>MMMMMmmm q boooo</h1>
+            <p>Bé, com diem este migdia, ens podem permetre un capritxet al mes, i el de febrer ja el tenim ací. Però ara no val pegar-li mos, eh perri. Va, puja cap a dalt.</p>
+            <button class="btn-continue" onclick="nextStep(10)">Ja estic dalt.</button>
+        </div>
+
+        <!-- Paso 10 -->
+        <div class="step" id="step10">
+            <h1>El xino me l'ha liat</h1>
+            <p>Tu creus? Si jo que he anat tot feliç a unflar els globets pensantme que estaven totes les lletres com en la imatge, i resulta que hi havia sols una...</p>
+            <button class="btn-continue" onclick="nextStep(11)">Ja he obert la porta de l'habitacio.</button>
+        </div>
+
+        <!-- Paso 11: Pregunta final con botones tricky -->
+        <div class="step" id="step11">
+            <h1>Una pregunta important <span class="heart">🤔</span></h1>
+            <p>¿Me vols molt veritat? ¿Saps que tens al millor novio del mon veritat? ¿Saps que tinc a la millor novia del mon veritat? ¿Perque no agafes al teu novio y li pegues un morreig? Te molt d'amor per a tu, i no sols hui tota una vida.</p>
+            
+            <div class="tricky-buttons">
+                <button class="btn-option btn-no" id="btnNo" onclick="shrinkNo()">No tinc ganes</button>
+                <button class="btn-option btn-yes" id="btnYes" onclick="suspiciousYes()">¡No puc més d'aquesta gimcana, necesite pegarli un morreig JA!</button>
+            </div>
+            
+            <p class="suspicious-text" id="suspiciousText">¿Ho dubtes? 🤨</p>
+        </div>
+
+        <!-- Paso 12: Final (aparece después del modal) -->
+        <div class="step final-step" id="step12">
+            <h1>Te ame <span class="heart">❤</span></h1>
+            <p>Gracies per poder disfrutar esta vida junt a tu.</p>
+        </div>
+
+        <!-- Indicador de progreso (12 dots) -->
+        <div class="progress-dots">
+            <div class="dot active" id="dot1"></div>
+            <div class="dot" id="dot2"></div>
+            <div class="dot" id="dot3"></div>
+            <div class="dot" id="dot4"></div>
+            <div class="dot" id="dot5"></div>
+            <div class="dot" id="dot6"></div>
+            <div class="dot" id="dot7"></div>
+            <div class="dot" id="dot8"></div>
+            <div class="dot" id="dot9"></div>
+            <div class="dot" id="dot10"></div>
+            <div class="dot" id="dot11"></div>
+            <div class="dot" id="dot12"></div>
+        </div>
+    </div>
+
+    <script>
+        let noClickCount = 0;
+        let originalNoSize = 1;
+        let currentStep = 1;
+
+        // Crear múltiples emojis flotantes
+        function createFloatingEmojis() {
+            const container = document.getElementById('emojisContainer');
+            const emojis = ['❤', '💖', '💕', '💗', '💓', '💝', '💘', '✨', '💫', '🌟', '💑', '💏', '😍', '🥰', '💖', '💐', '🌹', '🎈', '🎁', '💌'];
+            
+            // Crear 40 emojis con posiciones y animaciones variadas
+            for (let i = 0; i < 40; i++) {
+                const emoji = document.createElement('div');
+                emoji.className = 'emoji-float';
+                emoji.innerHTML = emojis[Math.floor(Math.random() * emojis.length)];
+                emoji.style.left = Math.random() * 100 + '%';
+                emoji.style.animationDelay = Math.random() * 12 + 's';
+                emoji.style.animationDuration = (Math.random() * 8 + 10) + 's';
+                emoji.style.fontSize = (Math.random() * 25 + 20) + 'px';
+                emoji.style.opacity = Math.random() * 0.4 + 0.3;
+                container.appendChild(emoji);
+            }
+        }
+
+        function nextStep(stepNum) {
+            // Ocultar paso actual
+            document.querySelectorAll('.step').forEach(step => {
+                step.classList.remove('active');
+            });
+            
+            // Pequeña pausa para transición suave
+            setTimeout(() => {
+                document.getElementById('step' + stepNum).classList.add('active');
+                currentStep = stepNum;
+            }, 100);
+
+            // Actualizar dots
+            document.querySelectorAll('.dot').forEach((dot, index) => {
+                dot.classList.toggle('active', index < stepNum);
+            });
+
+            // Efecto especial en el último paso
+            if (stepNum === 12) {
+                createSparkles();
+            }
+        }
+
+        // Botón "No" que se encoge
+        function shrinkNo() {
+            const btnNo = document.getElementById('btnNo');
+            const btnYes = document.getElementById('btnYes');
+            const suspiciousText = document.getElementById('suspiciousText');
+            
+            noClickCount++;
+            originalNoSize *= 0.75; // Reduce 25% cada vez
+            
+            btnNo.style.transform = `scale(${originalNoSize})`;
+            btnNo.classList.add('shrinking');
+            
+            // Hacer el botón "Sí" más grande
+            const yesScale = 1 + (noClickCount * 0.15);
+            btnYes.style.transform = `scale(${yesScale})`;
+            
+            // Mostrar texto sospechoso
+            suspiciousText.classList.add('show');
+            
+            // Mensajes progresivos
+            const messages = [
+                '¿Ho dubtes? 🤨',
+                'El botó s\'està fent xicotet... 😅',
+                'Casi desapareix... 😂',
+                '¿Segur que no vols l\'altre? 🤔',
+                'Última oportunitat! 🙈',
+                'Adéu botó! 👋'
+            ];
+            
+            if (originalNoSize < 0.15) {
+                btnNo.style.opacity = '0';
+                btnNo.style.pointerEvents = 'none';
+                suspiciousText.textContent = '¡Sols queda una opció! 😏';
+                suspiciousText.style.color = '#764ba2';
+            } else {
+                suspiciousText.textContent = messages[Math.min(noClickCount - 1, messages.length - 1)];
+            }
+        }
+
+        // Botón "Sí" que sospecha
+        function suspiciousYes() {
+            const modal = document.getElementById('teaseModal');
+            
+            // Solo mostrar modal si intentaron hacer clic en "No" antes
+            if (noClickCount > 0) {
+                modal.classList.add('show');
+            } else {
+                // Si no intentaron con el "No", ir directo al final
+                nextStep(12);
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('teaseModal').classList.remove('show');
+        }
+
+        function closeModalAndContinue() {
+            closeModal();
+            nextStep(12);
+        }
+
+        function restart() {
+            // Resetear variables
+            noClickCount = 0;
+            originalNoSize = 1;
+            currentStep = 1;
+            
+            // Resetear botones
+            const btnNo = document.getElementById('btnNo');
+            const btnYes = document.getElementById('btnYes');
+            const suspiciousText = document.getElementById('suspiciousText');
+            
+            btnNo.style.transform = 'scale(1)';
+            btnNo.style.opacity = '1';
+            btnNo.style.pointerEvents = 'auto';
+            btnNo.classList.remove('shrinking');
+            btnYes.style.transform = 'scale(1)';
+            suspiciousText.classList.remove('show');
+            suspiciousText.textContent = '¿Ho dubtes? 🤨';
+            suspiciousText.style.color = '#ff1744';
+            
+            // Volver al paso 1
+            document.querySelectorAll('.step').forEach(step => {
+                step.classList.remove('active');
+            });
+            
+            setTimeout(() => {
+                document.getElementById('step1').classList.add('active');
+            }, 100);
+
+            // Resetear dots
+            document.querySelectorAll('.dot').forEach(dot => {
+                dot.classList.remove('active');
+            });
+            document.getElementById('dot1').classList.add('active');
+            
+            // Limpiar sparkles
+            document.querySelectorAll('.sparkle').forEach(s => s.remove());
+        }
+
+        function createSparkles() {
+            const container = document.querySelector('.container');
+            // Limpiar sparkles anteriores
+            document.querySelectorAll('.sparkle').forEach(s => s.remove());
+            
+            for (let i = 0; i < 30; i++) {
+                const sparkle = document.createElement('div');
+                sparkle.className = 'sparkle';
+                sparkle.style.left = Math.random() * 100 + '%';
+                sparkle.style.top = Math.random() * 100 + '%';
+                sparkle.style.animationDelay = Math.random() * 2 + 's';
+                container.appendChild(sparkle);
+            }
+        }
+
+        // Inicializar
+        createFloatingEmojis();
+    </script>
+</body>
+</html>
