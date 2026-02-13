@@ -22,8 +22,8 @@
             position: relative;
         }
 
-        /* Fondo con emojis flotantes mejorado */
-        .floating-emojis {
+        /* Contenedor de elementos flotantes (emojis + fotos) */
+        .floating-background {
             position: fixed;
             width: 100%;
             height: 100%;
@@ -34,6 +34,7 @@
             overflow: hidden;
         }
 
+        /* Emojis flotantes */
         .emoji-float {
             position: absolute;
             font-size: 30px;
@@ -41,6 +42,29 @@
             bottom: -50px;
             opacity: 0.6;
             filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+            z-index: 1;
+        }
+
+        /* Fotos flotantes animadas */
+        .photo-float {
+            position: absolute;
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 20px;
+            animation: floatUpPhotos 15s linear infinite;
+            bottom: -150px;
+            opacity: 0.7;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            border: 3px solid white;
+            z-index: 2;
+            transition: transform 0.3s ease;
+        }
+
+        .photo-float:hover {
+            transform: scale(1.1) !important;
+            opacity: 0.9;
+            z-index: 10;
         }
 
         @keyframes floatUp {
@@ -56,9 +80,22 @@
             }
         }
 
-        /* Contenedor principal con efecto glassmorphism premium */
+        @keyframes floatUpPhotos {
+            0% {
+                transform: translateY(0) rotate(-5deg) scale(1);
+                opacity: 0;
+            }
+            15% { opacity: 0.8; }
+            85% { opacity: 0.8; }
+            100% {
+                transform: translateY(-100vh) rotate(5deg) scale(0.8);
+                opacity: 0;
+            }
+        }
+
+        /* Contenedor principal */
         .container {
-            background: rgba(255, 255, 255, 0.85);
+            background: rgba(255, 255, 255, 0.9);
             padding: 50px 40px;
             border-radius: 40px;
             box-shadow: 
@@ -79,7 +116,6 @@
             50% { transform: translateY(-8px) rotate(0.5deg); }
         }
 
-        /* Decoración de corazones en las esquinas */
         .container::before,
         .container::after {
             content: '💕';
@@ -105,7 +141,6 @@
             50% { transform: scale(1.2); opacity: 0.6; }
         }
 
-        /* Steps con transiciones suaves */
         .step {
             display: none;
             opacity: 0;
@@ -119,7 +154,6 @@
             transform: translateY(0) scale(1);
         }
 
-        /* Títulos estilizados */
         h1 {
             color: #d63384;
             font-size: 2.2em;
@@ -145,7 +179,6 @@
             75% { transform: scale(1.15); }
         }
 
-        /* Párrafos con mejor tipografía */
         p {
             color: #5a4a5a;
             font-size: 1.15em;
@@ -156,7 +189,6 @@
             padding: 0 10px;
         }
 
-        /* Botón principal estilizado */
         .btn-continue {
             background: linear-gradient(135deg, #ff6b9d 0%, #ff8e53 100%);
             color: white;
@@ -198,11 +230,6 @@
             left: 100%;
         }
 
-        .btn-continue:active {
-            transform: translateY(-2px) scale(0.98);
-        }
-
-        /* Botones de opción (Sí/No) */
         .tricky-buttons {
             display: flex;
             gap: 25px;
@@ -247,7 +274,6 @@
             transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
         }
 
-        /* Texto sospechoso */
         .suspicious-text {
             color: #ff1744;
             font-size: 1em;
@@ -264,7 +290,6 @@
             transform: translateY(0);
         }
 
-        /* Modal de confirmación */
         .tease-modal {
             position: fixed;
             top: 0;
@@ -353,7 +378,6 @@
             border-color: transparent;
         }
 
-        /* Indicador de progreso mejorado */
         .progress-dots {
             display: flex;
             justify-content: center;
@@ -378,7 +402,6 @@
             box-shadow: 0 4px 10px rgba(255, 107, 157, 0.4);
         }
 
-        /* Efectos especiales para el último paso */
         .final-step h1 {
             color: #ff1744;
             font-size: 2.4em;
@@ -399,7 +422,6 @@
             50% { opacity: 1; transform: scale(1) rotate(180deg); }
         }
 
-        /* Responsive */
         @media (max-width: 600px) {
             .container {
                 padding: 35px 25px;
@@ -418,20 +440,25 @@
                 padding: 15px 25px;
                 font-size: 0.95em;
             }
+
+            .photo-float {
+                width: 80px;
+                height: 80px;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- Fondo con múltiples emojis flotantes -->
-    <div class="floating-emojis" id="emojisContainer"></div>
+    <!-- Fondo con emojis y fotos flotantes -->
+    <div class="floating-background" id="floatingContainer"></div>
     
-    <!-- Modal travieso -->
+    <!-- Modal -->
     <div class="tease-modal" id="teaseModal">
         <div class="modal-content">
             <span class="emoji-big">😏</span>
             <h3>¿Segur que volies apretar l'altre?</h3>
             <p>¿Intentes escapar d'aquesta pregunta? Molt sospechós... 😏</p>
-            <button class="btn-modal" onclick="closeModalAndContinue()">Vuic pegar-li un morreig al meu novio jaaaa</button>
+            <button class="btn-modal" onclick="closeModalAndContinue()">Ok, m'has pillat... vuic pegar-li un morreig al meu novio</button>
             <button class="btn-modal" onclick="closeModal()">Vuic pensarmeu millor</button>
         </div>
     </div>
@@ -440,7 +467,7 @@
         <!-- Paso 1 -->
         <div class="step active" id="step1">
             <h1>Hola amorcito mio <span class="heart">❤</span></h1>
-            <p>Espere que estigues preparada per a esta gimcana, on t'indicaré pas a pas el que has de fer. Has de seguir els passos i, fins que no els realitzes, no podràs continuar. Sols podràs apretar el botó quan ja estigues al lloc indicat o hages realitzat l'acció pertinent. Per poder disfrutar d'una millor experiència, es recomana anar en la llum apagada y iluminar-se amb el flash del mobil…</p>
+            <p>Espere que estigues preparada per a esta gimcana, on t'indicaré pas a pas el que has de fer. Has de seguir els passos i, fins que no els realitzes, no podràs continuar. Sols podràs apretar el botó quan ja estigues al lloc indicat o hages realitzat l'acció pertinent…</p>
             <button class="btn-continue" onclick="nextStep(2)">Continuar</button>
         </div>
 
@@ -461,7 +488,7 @@
         <!-- Paso 4 -->
         <div class="step" id="step4">
             <h1>Llum roja</h1>
-            <p>Llum roja, Sant Valentín, cors, amor… Per a molts, un dia puntual, per a nosaltres, el dia a dia. Un amor pur, que ens il·lumina cada dia, que ens fa sentir especials, que ens fa sentir únics, que ens fa sentir que som els més afortunats del món per tindre'ns l'un a l'altre.</p>
+            <p>Llum roja, Sant Valentí, cors, amor… Per a molts, un dia puntual; per a nosaltres, el dia a dia. Un amor pur, que ens il·lumina cada dia, que ens fa sentir especials, que ens fa sentir únics, que ens fa sentir que som els més afortunats del món per tindre'ns l'un a l'altre.</p>
             <button class="btn-continue" onclick="nextStep(5)">Ja he apagat la llum</button>
         </div>
 
@@ -507,7 +534,7 @@
             <button class="btn-continue" onclick="nextStep(11)">Ja he obert la porta de l'habitacio.</button>
         </div>
 
-        <!-- Paso 11: Pregunta final con botones tricky -->
+        <!-- Paso 11 -->
         <div class="step" id="step11">
             <h1>Una pregunta important <span class="heart">🤔</span></h1>
             <p>¿Me vols molt veritat? ¿Saps que tens al millor novio del mon veritat? ¿Saps que tinc a la millor novia del mon veritat? ¿Perque no agafes al teu novio y li pegues un morreig? Te molt d'amor per a tu, i no sols hui tota una vida.</p>
@@ -520,13 +547,14 @@
             <p class="suspicious-text" id="suspiciousText">¿Ho dubtes? 🤨</p>
         </div>
 
-        <!-- Paso 12: Final (aparece después del modal) -->
+        <!-- Paso 12: Final -->
         <div class="step final-step" id="step12">
-            <h1>Te ame <span class="heart">❤</span></h1>
-            <p>Gracies per poder disfrutar esta vida junt a tu.</p>
+            <h1>Et adore <span class="heart">❤</span></h1>
+            <p>Gràcies per jugar amb mi, per ser tu, i per elegir quedar-te al meu costat. Ets el millor regal que m'ha donat la vida.</p>
+            <button class="btn-continue" onclick="restart()">Tornar a començar</button>
         </div>
 
-        <!-- Indicador de progreso (12 dots) -->
+        <!-- Dots -->
         <div class="progress-dots">
             <div class="dot active" id="dot1"></div>
             <div class="dot" id="dot2"></div>
@@ -548,13 +576,14 @@
         let originalNoSize = 1;
         let currentStep = 1;
 
-        // Crear múltiples emojis flotantes
-        function createFloatingEmojis() {
-            const container = document.getElementById('emojisContainer');
+        // Crear emojis y fotos flotantes
+        function createFloatingElements() {
+            const container = document.getElementById('floatingContainer');
+            
+            // Emojis (30 elementos)
             const emojis = ['❤', '💖', '💕', '💗', '💓', '💝', '💘', '✨', '💫', '🌟', '💑', '💏', '😍', '🥰', '💖', '💐', '🌹', '🎈', '🎁', '💌'];
             
-            // Crear 40 emojis con posiciones y animaciones variadas
-            for (let i = 0; i < 40; i++) {
+            for (let i = 0; i < 30; i++) {
                 const emoji = document.createElement('div');
                 emoji.className = 'emoji-float';
                 emoji.innerHTML = emojis[Math.floor(Math.random() * emojis.length)];
@@ -565,51 +594,62 @@
                 emoji.style.opacity = Math.random() * 0.4 + 0.3;
                 container.appendChild(emoji);
             }
+
+            // Fotos (5 fotos diferentes)
+            const photos = ['foto1.jpg', 'foto2.jpg', 'foto3.jpg', 'foto4.jpg', 'foto5.jpg'];
+            
+            for (let i = 0; i < 15; i++) { // 15 instancias de fotos (3 de cada una)
+                const photo = document.createElement('img');
+                photo.className = 'photo-float';
+                photo.src = photos[i % 5]; // Rotar entre las 5 fotos
+                photo.alt = 'Foto ' + ((i % 5) + 1);
+                photo.style.left = Math.random() * 90 + 5 + '%'; // Evitar los bordes extremos
+                photo.style.animationDelay = Math.random() * 15 + 's';
+                photo.style.animationDuration = (Math.random() * 10 + 12) + 's';
+                // Tamaños variados
+                const size = Math.random() * 60 + 100; // Entre 100px y 160px
+                photo.style.width = size + 'px';
+                photo.style.height = size + 'px';
+                photo.style.opacity = Math.random() * 0.3 + 0.6;
+                container.appendChild(photo);
+            }
         }
 
         function nextStep(stepNum) {
-            // Ocultar paso actual
             document.querySelectorAll('.step').forEach(step => {
                 step.classList.remove('active');
             });
             
-            // Pequeña pausa para transición suave
             setTimeout(() => {
                 document.getElementById('step' + stepNum).classList.add('active');
                 currentStep = stepNum;
             }, 100);
 
-            // Actualizar dots
             document.querySelectorAll('.dot').forEach((dot, index) => {
                 dot.classList.toggle('active', index < stepNum);
             });
 
-            // Efecto especial en el último paso
             if (stepNum === 12) {
                 createSparkles();
             }
         }
 
-        // Botón "No" que se encoge
         function shrinkNo() {
             const btnNo = document.getElementById('btnNo');
             const btnYes = document.getElementById('btnYes');
             const suspiciousText = document.getElementById('suspiciousText');
             
             noClickCount++;
-            originalNoSize *= 0.75; // Reduce 25% cada vez
+            originalNoSize *= 0.75;
             
             btnNo.style.transform = `scale(${originalNoSize})`;
             btnNo.classList.add('shrinking');
             
-            // Hacer el botón "Sí" más grande
             const yesScale = 1 + (noClickCount * 0.15);
             btnYes.style.transform = `scale(${yesScale})`;
             
-            // Mostrar texto sospechoso
             suspiciousText.classList.add('show');
             
-            // Mensajes progresivos
             const messages = [
                 '¿Ho dubtes? 🤨',
                 'El botó s\'està fent xicotet... 😅',
@@ -629,15 +669,12 @@
             }
         }
 
-        // Botón "Sí" que sospecha
         function suspiciousYes() {
             const modal = document.getElementById('teaseModal');
             
-            // Solo mostrar modal si intentaron hacer clic en "No" antes
             if (noClickCount > 0) {
                 modal.classList.add('show');
             } else {
-                // Si no intentaron con el "No", ir directo al final
                 nextStep(12);
             }
         }
@@ -652,12 +689,10 @@
         }
 
         function restart() {
-            // Resetear variables
             noClickCount = 0;
             originalNoSize = 1;
             currentStep = 1;
             
-            // Resetear botones
             const btnNo = document.getElementById('btnNo');
             const btnYes = document.getElementById('btnYes');
             const suspiciousText = document.getElementById('suspiciousText');
@@ -671,7 +706,6 @@
             suspiciousText.textContent = '¿Ho dubtes? 🤨';
             suspiciousText.style.color = '#ff1744';
             
-            // Volver al paso 1
             document.querySelectorAll('.step').forEach(step => {
                 step.classList.remove('active');
             });
@@ -680,19 +714,16 @@
                 document.getElementById('step1').classList.add('active');
             }, 100);
 
-            // Resetear dots
             document.querySelectorAll('.dot').forEach(dot => {
                 dot.classList.remove('active');
             });
             document.getElementById('dot1').classList.add('active');
             
-            // Limpiar sparkles
             document.querySelectorAll('.sparkle').forEach(s => s.remove());
         }
 
         function createSparkles() {
             const container = document.querySelector('.container');
-            // Limpiar sparkles anteriores
             document.querySelectorAll('.sparkle').forEach(s => s.remove());
             
             for (let i = 0; i < 30; i++) {
@@ -705,8 +736,7 @@
             }
         }
 
-        // Inicializar
-        createFloatingEmojis();
+        createFloatingElements();
     </script>
 </body>
 </html>
