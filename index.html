@@ -597,11 +597,11 @@
             // Fotos (5 fotos diferentes)
             const photos = ['foto1.jpg', 'foto2.jpg', 'foto3.jpg', 'foto4.jpg', 'foto5.jpg', 'foto6.jpg'];
             
-            for (let i = 0; i < 15; i++) { // 15 instancias de fotos (3 de cada una)
+            for (let i = 0; i < 18; i++) { // 15 instancias de fotos (3 de cada una)
                 const photo = document.createElement('img');
                 photo.className = 'photo-float';
-                photo.src = photos[i % 5]; // Rotar entre las 5 fotos
-                photo.alt = 'Foto ' + ((i % 5) + 1);
+                photo.src = photos[i % 6]; // Rotar entre las 6 fotos
+                photo.alt = 'Foto ' + ((i % 6) + 1);
                 photo.style.left = Math.random() * 90 + 5 + '%'; // Evitar los bordes extremos
                 photo.style.animationDelay = Math.random() * 15 + 's';
                 photo.style.animationDuration = (Math.random() * 10 + 12) + 's';
